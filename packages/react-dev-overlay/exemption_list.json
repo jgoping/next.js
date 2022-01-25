@@ -1,0 +1,5 @@
+{
+  "ban-element-innerhtml-assignments": [
+    "src/internal/components/Overlay/maintain--tab-focus.ts"
+  ]
+}

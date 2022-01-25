@@ -10,7 +10,13 @@
     "outDir": "lib",
     "jsx": "react",
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "plugins": [
+      {
+        "name": "tsec",
+        "exemptionConfig": "./exemption_list.json"
+      }
+    ]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules"]
