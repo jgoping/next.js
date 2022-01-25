@@ -5,7 +5,13 @@
     "target": "ES2017",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "jsx": "react"
+    "jsx": "react",
+    "plugins": [
+      {
+        "name": "tsec",
+        "exemptionConfig": "./exemption_list.json"
+      }
+    ]
   },
   "exclude": ["dist", "./*.d.ts"]
 }

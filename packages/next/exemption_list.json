@@ -1,0 +1,10 @@
+{
+  "ban-element-innerhtml-assignments": [
+    "client/head-manager.ts",
+    "client/script.tsx"
+  ],
+  "ban-element-setattribute": ["client/head-manager.ts", "client/script.tsx"],
+  "ban-script-content-assignments": ["client/script.tsx"],
+  "ban-script-src-assignments": ["client/route-loader.ts", "client/script.tsx"],
+  "ban-window-stringfunctiondef": ["lib/recursive-delete.ts"]
+}
