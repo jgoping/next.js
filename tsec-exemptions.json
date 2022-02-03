@@ -11,6 +11,5 @@
   "ban-script-src-assignments": [
     "packages/next/client/route-loader.ts",
     "packages/next/client/script.tsx"
-  ],
-  "ban-window-stringfunctiondef": ["packages/next/lib/recursive-delete.ts"]
+  ]
 }
