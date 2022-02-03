@@ -804,11 +804,16 @@ var focusSummary = {
 }
 
 function makeFocusableForeignObject() {
-  var fragment = document.createElement('div')
-  fragment.innerHTML =
-    '<svg><foreignObject width="30" height="30">\n      <input type="text"/>\n  </foreignObject></svg>'
+  var foreignObject = document.createElementNS(
+    'http://www.w3.org/2000/svg',
+    'foreignObject'
+  )
+  foreignObject.setAttribute('width', 30)
+  foreignObject.setAttribute('height', 30)
+  foreignObject.appendChild(document.createElement('input'))
+  foreignObject.lastChild.type = 'text'
 
-  return fragment.firstChild.firstChild
+  return foreignObject
 }
 
 function focusSvgForeignObjectHack(element) {
