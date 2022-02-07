@@ -804,12 +804,13 @@ var focusSummary = {
 }
 
 function makeFocusableForeignObject() {
+  // Returns <foreignObject width="30" height="30">\n      <input type="text"/>\n  </foreignObject>
   var foreignObject = document.createElementNS(
     'http://www.w3.org/2000/svg',
     'foreignObject'
   )
-  foreignObject.setAttribute('width', 30)
-  foreignObject.setAttribute('height', 30)
+  foreignObject.width.baseVal.value = 30
+  foreignObject.height.baseVal.value = 30
   foreignObject.appendChild(document.createElement('input'))
   foreignObject.lastChild.type = 'text'
 
