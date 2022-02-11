@@ -8,8 +8,5 @@
     "packages/next/client/script.tsx"
   ],
   "ban-script-content-assignments": ["packages/next/client/script.tsx"],
-  "ban-script-src-assignments": [
-    "packages/next/client/route-loader.ts",
-    "packages/next/client/script.tsx"
-  ]
+  "ban-script-src-assignments": ["packages/next/client/script.tsx"]
 }
