@@ -303,7 +303,7 @@ export function createRouteLoader(assetPrefix: string): RouteLoader {
     // disposed and readded. Executing scripts twice has no functional
     // differences
     if (process.env.NODE_ENV !== 'development') {
-      let prom: Promise<unknown> | undefined = loadedScripts.get(src as string)
+      let prom: Promise<unknown> | undefined = loadedScripts.get(src.toString())
       if (prom) {
         return prom
       }
@@ -313,7 +313,7 @@ export function createRouteLoader(assetPrefix: string): RouteLoader {
         return Promise.resolve()
       }
 
-      loadedScripts.set(src as string, (prom = appendScript(src)))
+      loadedScripts.set(src.toString(), (prom = appendScript(src)))
       return prom
     } else {
       return appendScript(src)
