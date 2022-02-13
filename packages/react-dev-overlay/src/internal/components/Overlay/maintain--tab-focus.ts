@@ -804,7 +804,8 @@ var focusSummary = {
 }
 
 function makeFocusableForeignObject() {
-  // Returns <foreignObject width="30" height="30">\n      <input type="text"/>\n  </foreignObject>
+  // Constructs <foreignObject width="30" height="30"><input type="text"/></foreignObject>
+  // without raising a Trusted Types violation
   var foreignObject = document.createElementNS(
     'http://www.w3.org/2000/svg',
     'foreignObject'
