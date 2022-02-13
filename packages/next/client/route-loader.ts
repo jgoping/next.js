@@ -280,9 +280,10 @@ function getFilesForRoute(
     const allFiles = manifest[route].map(
       (entry) => assetPrefix + '/_next/' + encodeURI(entry)
     )
-    const jsFiles = allFiles.filter((v) => v.endsWith('.js'))
     return {
-      scripts: jsFiles.map((v) => __unsafeCreateTrustedScriptURL(v)),
+      scripts: allFiles
+        .filter((v) => v.endsWith('.js'))
+        .map((v) => __unsafeCreateTrustedScriptURL(v)),
       css: allFiles.filter((v) => v.endsWith('.css')),
     }
   })
