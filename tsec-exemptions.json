@@ -1,7 +1,6 @@
 {
   "ban-element-innerhtml-assignments": [
     "packages/next/client/head-manager.ts",
-    "packages/next/client/script.tsx",
     "packages/react-dev-overlay/src/internal/components/Overlay/maintain--tab-focus.ts"
   ],
   "ban-element-setattribute": [
