@@ -3,6 +3,11 @@ import { ScriptHTMLAttributes } from 'react'
 import { HeadManagerContext } from '../shared/lib/head-manager-context'
 import { DOMAttributeNames } from './head-manager'
 import { requestIdleCallback } from './request-idle-callback'
+import {
+  isTrustedScript,
+  __unsafeCreateTrustedHTML,
+  __unsafeCreateTrustedScript,
+} from './trusted-types'
 
 const ScriptCache = new Map()
 const LoadCache = new Set()
@@ -78,14 +83,29 @@ const loadScript = (props: ScriptProps): void => {
   LoadCache.add(cacheKey)
 
   if (dangerouslySetInnerHTML) {
-    el.innerHTML = dangerouslySetInnerHTML.__html || ''
+    console.error(
+      "Using 'dangerouslySetInnerHTML' within <script> tags is not supported by Next.js."
+    )
+    el.innerHTML =
+      dangerouslySetInnerHTML.__html ||
+      (__unsafeCreateTrustedHTML('') as string)
   } else if (children) {
-    el.textContent =
-      typeof children === 'string'
-        ? children
-        : Array.isArray(children)
-        ? children.join('')
-        : ''
+    // Assign to el.textContent based on the type of children
+    if (typeof children === 'string' || isTrustedScript(children)) {
+      el.textContent = children as string
+    } else if (Array.isArray(children)) {
+      let textContent: TrustedScript | string = children.join('')
+
+      // If all of the children are TrustedScripts, then it is safe to promote
+      // textContent to a TrustedScript
+      if (children.every((child) => isTrustedScript(child))) {
+        textContent = __unsafeCreateTrustedScript(textContent)
+      }
+
+      el.textContent = textContent as string
+    } else {
+      el.textContent = __unsafeCreateTrustedScript('') as string
+    }
   } else if (src) {
     el.src = src
   }
