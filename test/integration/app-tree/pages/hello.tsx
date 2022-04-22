@@ -7,7 +7,7 @@ const Page: NextPage<{ html: string }> = ({ html }) =>
   html ? (
     <>
       <p>saved:</p>
-      <div dangerouslySetInnerHTML={{ __html: html }} />
+      <div>{html}</div>
     </>
   ) : (
     <p>Hello world</p>

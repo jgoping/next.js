@@ -96,6 +96,7 @@ class Playwright extends BrowserInterface {
 
     page.on('console', (msg) => {
       console.log('browser log:', msg)
+      console.log(`details: ${JSON.stringify(msg.location(), null, 2)}`)
       pageLogs.push({ source: msg.type(), message: msg.text() })
     })
     page.on('crash', (page) => {

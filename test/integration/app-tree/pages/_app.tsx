@@ -34,7 +34,7 @@ class MyApp<P = {}> extends App<P & { html: string }> {
 
     return html && router.pathname !== '/hello' ? (
       <>
-        <div dangerouslySetInnerHTML={{ __html: html }} />
+        <div>{html}</div>
         <Link href={href}>
           <a id={href === '/' ? 'home' : 'another'}>to {href}</a>
         </Link>

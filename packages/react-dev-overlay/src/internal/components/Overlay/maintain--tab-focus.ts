@@ -9,6 +9,11 @@
 import _platform from 'platform'
 import cssEscape from 'css.escape'
 
+import {
+  __unsafeCreateTrustedScriptURL,
+  __unsafeCreateTrustedHTML,
+} from '../../../trusted-types'
+
 // input may be undefined, selector-tring, Node, NodeList, HTMLCollection, array of Nodes
 // yes, to some extent this is a bad replica of jQuery's constructor function
 function nodeArray(input) {
@@ -274,7 +279,7 @@ function before() {
 //  {function} callback(element, focusTarget, document) to manipulate test-result
 function test(data, options) {
   // make sure we operate on a clean slate
-  data.wrapper.innerHTML = ''
+  data.wrapper.textContent = ''
   // create dummy element to test focusability of
   var element =
     typeof options.element === 'string'
@@ -430,19 +435,21 @@ function cssShadowPiercingDeepCombinator() {
   return combinator
 }
 
-var gif =
+var gif = __unsafeCreateTrustedScriptURL(
   'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+)
 
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-usemap
 var focusAreaImgTabindex = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML =
+    element.innerHTML = __unsafeCreateTrustedHTML(
       '<map name="image-map-tabindex-test">' +
-      '<area shape="rect" coords="63,19,144,45"></map>' +
-      '<img usemap="#image-map-tabindex-test" tabindex="-1" alt="" src="' +
-      gif +
-      '">'
+        '<area shape="rect" coords="63,19,144,45"></map>' +
+        '<img usemap="#image-map-tabindex-test" tabindex="-1" alt="" src="' +
+        gif +
+        '">'
+    )
 
     return element.querySelector('area')
   },
@@ -452,12 +459,13 @@ var focusAreaImgTabindex = {
 var focusAreaTabindex = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML =
+    element.innerHTML = __unsafeCreateTrustedHTML(
       '<map name="image-map-tabindex-test">' +
-      '<area href="#void" tabindex="-1" shape="rect" coords="63,19,144,45"></map>' +
-      '<img usemap="#image-map-tabindex-test" alt="" src="' +
-      gif +
-      '">'
+        '<area href="#void" tabindex="-1" shape="rect" coords="63,19,144,45"></map>' +
+        '<img usemap="#image-map-tabindex-test" alt="" src="' +
+        gif +
+        '">'
+    )
 
     return false
   },
@@ -478,12 +486,13 @@ var focusAreaTabindex = {
 var focusAreaWithoutHref = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML =
+    element.innerHTML = __unsafeCreateTrustedHTML(
       '<map name="image-map-area-href-test">' +
-      '<area shape="rect" coords="63,19,144,45"></map>' +
-      '<img usemap="#image-map-area-href-test" alt="" src="' +
-      gif +
-      '">'
+        '<area shape="rect" coords="63,19,144,45"></map>' +
+        '<img usemap="#image-map-area-href-test" alt="" src="' +
+        gif +
+        '">'
+    )
 
     return element.querySelector('area')
   },
@@ -511,19 +520,21 @@ var focusAudioWithoutControls = {
   },
 }
 
-var invalidGif =
+var invalidGif = __unsafeCreateTrustedScriptURL(
   'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'
+)
 
 // NOTE: https://github.com/medialize/ally.js/issues/35
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-usemap
 var focusBrokenImageMap = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML =
+    element.innerHTML = __unsafeCreateTrustedHTML(
       '<map name="broken-image-map-test"><area href="#void" shape="rect" coords="63,19,144,45"></map>' +
-      '<img usemap="#broken-image-map-test" alt="" src="' +
-      invalidGif +
-      '">'
+        '<img usemap="#broken-image-map-test" alt="" src="' +
+        invalidGif +
+        '">'
+    )
 
     return element.querySelector('area')
   },
@@ -538,7 +549,9 @@ var focusChildrenOfFocusableFlexbox = {
       'style',
       'display: -webkit-flex; display: -ms-flexbox; display: flex;'
     )
-    element.innerHTML = '<span style="display: block;">hello</span>'
+    element.innerHTML = __unsafeCreateTrustedHTML(
+      '<span style="display: block;">hello</span>'
+    )
     return element.querySelector('span')
   },
 }
@@ -558,7 +571,9 @@ var focusFieldsetDisabled = {
 var focusFieldset = {
   element: 'fieldset',
   mutate: function mutate(element) {
-    element.innerHTML = '<legend>legend</legend><p>content</p>'
+    element.innerHTML = __unsafeCreateTrustedHTML(
+      '<legend>legend</legend><p>content</p>'
+    )
   },
 }
 
@@ -570,7 +585,9 @@ var focusFlexboxContainer = {
       'style',
       'display: -webkit-flex; display: -ms-flexbox; display: flex;'
     )
-    element.innerHTML = '<span style="display: block;">hello</span>'
+    element.innerHTML = __unsafeCreateTrustedHTML(
+      '<span style="display: block;">hello</span>'
+    )
   },
 }
 
@@ -592,7 +609,9 @@ var focusImgIsmap = {
   element: 'a',
   mutate: function mutate(element) {
     element.href = '#void'
-    element.innerHTML = '<img ismap src="' + gif + '" alt="">'
+    element.innerHTML = __unsafeCreateTrustedHTML(
+      '<img ismap src="' + gif + '" alt="">'
+    )
     return element.querySelector('img')
   },
 }
@@ -602,12 +621,13 @@ var focusImgIsmap = {
 var focusImgUsemapTabindex = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML =
+    element.innerHTML = __unsafeCreateTrustedHTML(
       '<map name="image-map-tabindex-test"><area href="#void" shape="rect" coords="63,19,144,45"></map>' +
-      '<img usemap="#image-map-tabindex-test" tabindex="-1" alt="" ' +
-      'src="' +
-      gif +
-      '">'
+        '<img usemap="#image-map-tabindex-test" tabindex="-1" alt="" ' +
+        'src="' +
+        gif +
+        '">'
+    )
 
     return element.querySelector('img')
   },
@@ -671,10 +691,11 @@ var focusLabelTabindex = {
   },
 }
 
-var svg =
+var svg = __unsafeCreateTrustedScriptURL(
   'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtb' +
-  'G5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBpZD0ic3ZnIj48dGV4dCB4PSIxMCIgeT0iMjAiIGlkPSJ' +
-  'zdmctbGluay10ZXh0Ij50ZXh0PC90ZXh0Pjwvc3ZnPg=='
+    'G5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBpZD0ic3ZnIj48dGV4dCB4PSIxMCIgeT0iMjAiIGlkPSJ' +
+    'zdmctbGluay10ZXh0Ij50ZXh0PC90ZXh0Pjwvc3ZnPg=='
+)
 
 // Note: IE10 on BrowserStack does not like this test
 
@@ -721,12 +742,13 @@ function focusObjectSwf() {
 var focusRedirectImgUsemap = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML =
+    element.innerHTML = __unsafeCreateTrustedHTML(
       '<map name="focus-redirect-img-usemap"><area href="#void" shape="rect" coords="63,19,144,45"></map>' +
-      '<img usemap="#focus-redirect-img-usemap" alt="" ' +
-      'src="' +
-      gif +
-      '">'
+        '<img usemap="#focus-redirect-img-usemap" alt="" ' +
+        'src="' +
+        gif +
+        '">'
+    )
 
     // focus the <img>, not the <div>
     return element.querySelector('img')
@@ -742,8 +764,9 @@ var focusRedirectImgUsemap = {
 var focusRedirectLegend = {
   element: 'fieldset',
   mutate: function mutate(element) {
-    element.innerHTML =
+    element.innerHTML = __unsafeCreateTrustedHTML(
       '<legend>legend</legend><input tabindex="-1"><input tabindex="0">'
+    )
     // take care of focus in validate();
     return false
   },
@@ -769,8 +792,9 @@ var focusScrollBody = {
   element: 'div',
   mutate: function mutate(element) {
     element.setAttribute('style', 'width: 100px; height: 50px; overflow: auto;')
-    element.innerHTML =
+    element.innerHTML = __unsafeCreateTrustedHTML(
       '<div style="width: 500px; height: 40px;">scrollable content</div>'
+    )
     return element.querySelector('div')
   },
 }
@@ -780,8 +804,9 @@ var focusScrollContainerWithoutOverflow = {
   element: 'div',
   mutate: function mutate(element) {
     element.setAttribute('style', 'width: 100px; height: 50px;')
-    element.innerHTML =
+    element.innerHTML = __unsafeCreateTrustedHTML(
       '<div style="width: 500px; height: 40px;">scrollable content</div>'
+    )
   },
 }
 
@@ -790,32 +815,29 @@ var focusScrollContainer = {
   element: 'div',
   mutate: function mutate(element) {
     element.setAttribute('style', 'width: 100px; height: 50px; overflow: auto;')
-    element.innerHTML =
+    element.innerHTML = __unsafeCreateTrustedHTML(
       '<div style="width: 500px; height: 40px;">scrollable content</div>'
+    )
   },
 }
 
 var focusSummary = {
   element: 'details',
   mutate: function mutate(element) {
-    element.innerHTML = '<summary>foo</summary><p>content</p>'
+    element.innerHTML = __unsafeCreateTrustedHTML(
+      '<summary>foo</summary><p>content</p>'
+    )
     return element.firstElementChild
   },
 }
 
 function makeFocusableForeignObject() {
-  // Constructs <foreignObject width="30" height="30"><input type="text"/></foreignObject>
-  // without raising a Trusted Types violation
-  var foreignObject = document.createElementNS(
-    'http://www.w3.org/2000/svg',
-    'foreignObject'
+  var fragment = document.createElement('div')
+  fragment.innerHTML = __unsafeCreateTrustedHTML(
+    '<svg><foreignObject width="30" height="30">\n      <input type="text"/>\n  </foreignObject></svg>'
   )
-  foreignObject.width.baseVal.value = 30
-  foreignObject.height.baseVal.value = 30
-  foreignObject.appendChild(document.createElement('input'))
-  foreignObject.lastChild.type = 'text'
 
-  return foreignObject
+  return fragment.firstChild.firstChild
 }
 
 function focusSvgForeignObjectHack(element) {
@@ -873,7 +895,9 @@ function validate(element, focusTarget, _document) {
 var focusSvgFocusableAttribute = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML = generate('<text focusable="true">a</text>')
+    element.innerHTML = __unsafeCreateTrustedHTML(
+      generate('<text focusable="true">a</text>')
+    )
     return element.querySelector('text')
   },
   validate: validate,
@@ -882,7 +906,9 @@ var focusSvgFocusableAttribute = {
 var focusSvgTabindexAttribute = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML = generate('<text tabindex="0">a</text>')
+    element.innerHTML = __unsafeCreateTrustedHTML(
+      generate('<text tabindex="0">a</text>')
+    )
     return element.querySelector('text')
   },
   validate: validate,
@@ -891,7 +917,9 @@ var focusSvgTabindexAttribute = {
 var focusSvgNegativeTabindexAttribute = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML = generate('<text tabindex="-1">a</text>')
+    element.innerHTML = __unsafeCreateTrustedHTML(
+      generate('<text tabindex="-1">a</text>')
+    )
     return element.querySelector('text')
   },
   validate: validate,
@@ -900,11 +928,13 @@ var focusSvgNegativeTabindexAttribute = {
 var focusSvgUseTabindex = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML = generate(
-      [
-        '<g id="ally-test-target"><a xlink:href="#void"><text>link</text></a></g>',
-        '<use xlink:href="#ally-test-target" x="0" y="0" tabindex="-1" />',
-      ].join('')
+    element.innerHTML = __unsafeCreateTrustedHTML(
+      generate(
+        [
+          '<g id="ally-test-target"><a xlink:href="#void"><text>link</text></a></g>',
+          '<use xlink:href="#ally-test-target" x="0" y="0" tabindex="-1" />',
+        ].join('')
+      )
     )
 
     return element.querySelector('use')
@@ -915,8 +945,10 @@ var focusSvgUseTabindex = {
 var focusSvgForeignobjectTabindex = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML = generate(
-      '<foreignObject tabindex="-1"><input type="text" /></foreignObject>'
+    element.innerHTML = __unsafeCreateTrustedHTML(
+      generate(
+        '<foreignObject tabindex="-1"><input type="text" /></foreignObject>'
+      )
     )
     // Safari 8's quersSelector() can't identify foreignObject, but getElementyByTagName() can
     return (
@@ -945,7 +977,7 @@ function focusSvgInIframe() {
 var focusSvg = {
   element: 'div',
   mutate: function mutate(element) {
-    element.innerHTML = generate('')
+    element.innerHTML = __unsafeCreateTrustedHTML(generate(''))
     return element.firstChild
   },
   validate: validate,
@@ -967,7 +999,7 @@ var focusTable = {
     // https://stackoverflow.com/a/8097055/515124
     // element.innerHTML = '<tr><td>cell</td></tr>';
     var fragment = _document.createDocumentFragment()
-    fragment.innerHTML = '<tr><td>cell</td></tr>'
+    fragment.innerHTML = __unsafeCreateTrustedHTML('<tr><td>cell</td></tr>')
     element.appendChild(fragment)
   },
 }

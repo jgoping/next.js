@@ -762,11 +762,28 @@ export default abstract class Server {
       : ['/_next']
 
     // Headers come very first
-    const headers = this.minimalMode
+    let headers = this.minimalMode
       ? []
       : this.customRoutes.headers.map((rule) =>
           createHeaderRoute({ rule, restrictedRedirectPaths })
         )
+
+    if (process.env.__NEXT_TEST_MODE) {
+      headers.push(
+        createHeaderRoute({
+          rule: {
+            source: '/:path*{/}?',
+            headers: [
+              {
+                key: 'Content-Security-Policy-Report-Only',
+                value: "require-trusted-types-for 'script'",
+              },
+            ],
+          },
+          restrictedRedirectPaths,
+        })
+      )
+    }
 
     const redirects = this.minimalMode
       ? []

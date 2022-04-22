@@ -1,5 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
+import { __unsafeCreateTrustedScriptURL } from '../../../lib/trusted-types'
 
 export default () => (
   <div>
@@ -116,9 +117,15 @@ export default () => (
       <link rel="stylesheet" href="dedupe-style.css" key="my-style" />
 
       {/* this should not execute twice on the client */}
-      <script src="/test-async.js" async></script>
+      <script
+        src={__unsafeCreateTrustedScriptURL('/test-async.js')}
+        async
+      ></script>
       {/* this should not execute twice on the client (intentionally sets defer to `yas` to test boolean coercion) */}
-      <script src="/test-defer.js" defer="yas"></script>
+      <script
+        src={__unsafeCreateTrustedScriptURL('/test-defer.js')}
+        defer="yas"
+      ></script>
 
       {/* such style can be used for alternate links on _app vs individual pages */}
       {['pl', 'en'].map((language) => (
