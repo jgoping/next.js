@@ -1,4 +1,5 @@
 import { addMessageListener } from './error-overlay/websocket'
+import { __unsafeCreateTrustedHTML } from '../trusted-types'
 
 export default function initializeBuildWatcher(
   toggleCallback,
@@ -102,7 +103,7 @@ export default function initializeBuildWatcher(
 function createContainer(prefix) {
   const container = document.createElement('div')
   container.id = `${prefix}container`
-  container.innerHTML = `
+  container.innerHTML = __unsafeCreateTrustedHTML(`
     <div id="${prefix}icon-wrapper">
       <svg viewBox="0 0 226 200">
         <defs>
@@ -122,7 +123,7 @@ function createContainer(prefix) {
         </g>
       </svg>
     </div>
-  `
+  `)
 
   return container
 }

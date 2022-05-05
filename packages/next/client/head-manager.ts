@@ -1,3 +1,9 @@
+import {
+  isTrustedScript,
+  __unsafeCreateTrustedHTML,
+  __unsafeCreateTrustedScript,
+} from './trusted-types'
+
 export const DOMAttributeNames: Record<string, string> = {
   acceptCharset: 'accept-charset',
   className: 'class',
@@ -28,14 +34,33 @@ function reactElementToDOM({ type, props }: JSX.Element): HTMLElement {
 
   const { children, dangerouslySetInnerHTML } = props
   if (dangerouslySetInnerHTML) {
-    el.innerHTML = dangerouslySetInnerHTML.__html || ''
+    if (type === 'script') {
+      console.error(
+        "Using 'dangerouslySetInnerHTML' within <script> tags is not supported by Next.js."
+      )
+    }
+    el.innerHTML =
+      dangerouslySetInnerHTML.__html || __unsafeCreateTrustedHTML('')
   } else if (children) {
-    el.textContent =
-      typeof children === 'string'
-        ? children
-        : Array.isArray(children)
-        ? children.join('')
-        : ''
+    // Assign to el.textContent based on the type of children
+    if (typeof children === 'string' || isTrustedScript(children)) {
+      el.textContent = children
+    } else if (Array.isArray(children)) {
+      let textContent: TrustedScript | string = children.join('')
+
+      // If all of the children are TrustedScripts or if textContent is empty,
+      // then it is safe to promote textContent to a TrustedScript
+      if (
+        children.every((child) => isTrustedScript(child)) ||
+        textContent === ''
+      ) {
+        textContent = __unsafeCreateTrustedScript(textContent)
+      }
+
+      el.textContent = textContent as string
+    } else {
+      el.textContent = __unsafeCreateTrustedScript('') as string
+    }
   }
   return el
 }

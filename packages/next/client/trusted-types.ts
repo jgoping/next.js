@@ -22,6 +22,34 @@ function getPolicy() {
 }
 
 /**
+ * Unsafely promote a string to a TrustedHTML, falling back to strings when
+ * Trusted Types are not available.
+ * This is a security-sensitive function; any use of this function
+ * must go through security review. In particular, it must be assured that the
+ * provided string will never cause an XSS vulnerability if used in a context
+ * that will be interpreted as HTML by a browser, e.g. when assigning to
+ * element.innerHTML.
+ */
+export function __unsafeCreateTrustedHTML(html: string): TrustedHTML | string {
+  return getPolicy()?.createHTML(html) || html
+}
+
+/**
+ * Unsafely promote a string to a TrustedScript, falling back to strings when
+ * Trusted Types are not available.
+ * This is a security-sensitive function; any use of this function
+ * must go through security review. In particular, it must be assured that the
+ * provided string will never cause an XSS vulnerability if used in a context
+ * that will be interpreted and executed as a script by a browser, e.g. when
+ * calling eval.
+ */
+export function __unsafeCreateTrustedScript(
+  script: string
+): TrustedScript | string {
+  return getPolicy()?.createScript(script) || script
+}
+
+/**
  * Unsafely promote a string to a TrustedScriptURL, falling back to strings
  * when Trusted Types are not available.
  * This is a security-sensitive function; any use of this function
@@ -34,4 +62,14 @@ export function __unsafeCreateTrustedScriptURL(
   url: string
 ): TrustedScriptURL | string {
   return getPolicy()?.createScriptURL(url) || url
+}
+
+/**
+ * Returns true if the input is a TrustedScript object, and returns false
+ * otherwise.
+ */
+export function isTrustedScript(script: any): boolean {
+  return (
+    typeof window !== 'undefined' && !!window.trustedTypes?.isScript(script)
+  )
 }
